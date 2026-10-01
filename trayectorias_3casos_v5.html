@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trayectorias · Sistema de cuidados · 3 casos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F2F4F7;
+  --surface:#FFFFFF;
+  --ink:#0D1F35;
+  --ink2:#3A5068;
+  --ink3:#7A93AA;
+  --line:#D6DDE6;
+  --blue:#0B4F8A;
+  --blue2:#1A6AC8;
+  --blue-light:#E8F0F9;
+  --gold:#D4990A;
+  --gold-bg:#FEF7E0;
+  --r1:#C84B2F;--r2:#1A7A5A;--r3:#B07010;
+  --r4:#1A5FAA;--r5:#6B3A94;--r6:#1A8F8F;
+  --r7:#AA3A60;--r8:#4A7A1A;
+  --vinc-c:#0F6E56;--vinc-bg:#E4F5EE;
+  --estr-c:#7A4A08;--estr-bg:#FBF0DC;
+  --serv-c:#1B4F8A;--serv-bg:#E5EEF9;
+  --mdh-c:#1B4F8A;--mdh-bg:#E5EEF9;
+  --msal-c:#0F6E56;--msal-bg:#E4F5EE;
+  --otro-c:#5C6A7A;--otro-bg:#EEF0F3;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:"Archivo",sans-serif;font-size:12px;min-height:100vh;}
+
+/* HEADER */
+.site-header{
+  background:var(--blue);
+  padding:0;
+  display:flex;flex-direction:column;
+}
+.header-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 28px 12px;flex-wrap:wrap;gap:10px;
+}
+.header-top h1{
+  font-size:15px;font-weight:700;color:#fff;
+  letter-spacing:.01em;line-height:1.25;
+}
+.header-top .sub{font-size:10px;color:rgba(255,255,255,.6);letter-spacing:.06em;text-transform:uppercase;margin-top:3px;}
+.header-brand{
+  display:flex;align-items:center;gap:14px;
+}
+.brand-badge{
+  background:var(--gold);color:#fff;
+  font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 12px;border-radius:4px;white-space:nowrap;
+}
+.leg{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10.5px;color:rgba(255,255,255,.75);}
+.leg-dot{width:7px;height:7px;border-radius:50%;}
+.ld-mdh{background:#6AAEE0;}
+.ld-msal{background:#4FD0A0;}
+.ld-otro{background:#A0B4C8;}
+.header-stripe{height:3px;background:var(--gold);}
+
+/* TABS */
+.tabs{
+  display:flex;background:var(--surface);
+  border-bottom:1px solid var(--line);
+  padding:0 28px;overflow-x:auto;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.tab{
+  border:none;background:none;cursor:pointer;
+  padding:11px 20px 9px;
+  font-family:"Archivo",sans-serif;font-size:11.5px;font-weight:700;
+  color:var(--ink3);letter-spacing:.03em;text-transform:uppercase;
+  border-bottom:3px solid transparent;
+  white-space:nowrap;transition:color .12s,border-color .12s;
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+}
+.tab:hover{color:var(--blue);}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab .tsub{font-size:10px;font-weight:400;color:var(--ink3);letter-spacing:.01em;text-transform:none;}
+.tab.active .tsub{color:var(--ink2);}
+
+/* CASE PANEL */
+.caso{display:none;max-width:840px;margin:0 auto;padding:32px 24px 60px;}
+.caso.show{display:block;}
+
+/* PROFILE */
+.profile{
+  background:var(--surface);border-radius:10px;
+  border-left:4px solid var(--blue);
+  padding:18px 20px;margin-bottom:24px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.profile-eyebrow{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-weight:700;}
+.profile-name{font-size:18px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:12px;}
+.profile-pills{display:flex;flex-wrap:wrap;gap:5px;}
+.pp{font-size:11px;font-weight:600;padding:3px 11px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--ink2);}
+.pp.disp{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+/* SECTION LABEL */
+.section-label{
+  font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink3);margin-bottom:10px;font-weight:700;
+  display:flex;align-items:center;gap:10px;
+}
+.section-label::after{content:"";flex:1;height:1px;background:var(--line);}
+
+/* CHAR GRID */
+.char-section{margin-bottom:32px;}
+.char-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-radius:10px;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.07);
+  border:1px solid var(--line);
+}
+@media(max-width:580px){.char-grid{grid-template-columns:1fr;}}
+.char-col{background:var(--surface);padding:16px 15px;border-right:1px solid var(--line);}
+.char-col:last-child{border-right:none;}
+.char-label{
+  font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid;
+}
+.char-col.c-ctx .char-label{color:#925C10;border-color:#F5D28A;}
+.char-col.c-rel .char-label{color:#0B4F8A;border-color:#A8C8F0;}
+.char-col.c-ind .char-label{color:#5C2A8A;border-color:#C8A8F0;}
+.char-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.ctag{font-size:11px;line-height:1.5;padding:3px 9px;border-radius:5px;}
+.c-ctx .ctag{background:#FBF0DC;color:#7A4A08;}
+.c-rel .ctag{background:#E5EEF9;color:#1B4F8A;}
+.c-ind .ctag{background:#F0E8FC;color:#5C2A8A;}
+
+/* TIMELINE */
+.tl{position:relative;}
+.tl::before{
+  content:"";position:absolute;left:64px;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,transparent,var(--line) 4%,var(--line) 96%,transparent);
+}
+.moment{display:grid;grid-template-columns:64px 28px 1fr;position:relative;}
+.m-label{grid-column:1;display:flex;align-items:flex-start;justify-content:flex-end;padding-top:16px;}
+.m-badge{
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:9px 5px;border-radius:5px 0 0 5px;
+  color:#fff;white-space:nowrap;line-height:1;
+}
+.m-dot{grid-column:2;display:flex;align-items:flex-start;justify-content:center;padding-top:20px;position:relative;z-index:1;}
+.m-dot::before{content:"";width:11px;height:11px;border-radius:50%;background:var(--surface);border:2.5px solid;flex-shrink:0;}
+.m-content{
+  grid-column:3;padding:13px 0 6px 18px;
+  border-bottom:1px dashed var(--line);
+  margin-bottom:2px;
+}
+.moment:last-child .m-content{border-bottom:none;}
+.m-title{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:9px;color:var(--ink);}
+
+.m-row{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--line);}
+.m-row:last-child{border-bottom:none;}
+.cat-tag{
+  font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;white-space:nowrap;
+  align-self:flex-start;flex-shrink:0;min-width:78px;text-align:center;
+}
+.cat-tag.vinc{background:var(--vinc-bg);color:var(--vinc-c);}
+.cat-tag.estr{background:var(--estr-bg);color:var(--estr-c);}
+.cat-tag.serv{background:var(--serv-bg);color:var(--serv-c);}
+.m-text{font-size:12px;line-height:1.68;color:var(--ink2);}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.ch{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:4px;}
+.ch-mdh{background:var(--mdh-bg);color:var(--mdh-c);}
+.ch-msal{background:var(--msal-bg);color:var(--msal-c);}
+.ch-otro{background:var(--otro-bg);color:var(--otro-c);}
+
+.m0 .m-dot::before{border-color:var(--r1);} .m0 .m-badge{background:var(--r1);}
+.m1 .m-dot::before{border-color:var(--r2);} .m1 .m-badge{background:var(--r2);}
+.m2 .m-dot::before{border-color:var(--r3);} .m2 .m-badge{background:var(--r3);}
+.m3 .m-dot::before{border-color:var(--r4);} .m3 .m-badge{background:var(--r4);}
+.m4 .m-dot::before{border-color:var(--r5);} .m4 .m-badge{background:var(--r5);}
+.m5 .m-dot::before{border-color:var(--r6);} .m5 .m-badge{background:var(--r6);}
+.m6 .m-dot::before{border-color:var(--r7);} .m6 .m-badge{background:var(--r7);}
+.m7 .m-dot::before{border-color:var(--r8);} .m7 .m-badge{background:var(--r8);}
+
+footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-size:10px;color:var(--ink3);line-height:1.7;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <div>
+      <h1>Trayectorias en el sistema de cuidados</h1>
+      <div class="sub">Red Interministerial GCBA · MDHyH + MSAL · Vital Strategies</div>
+    </div>
+    <div class="header-brand">
+      <span class="brand-badge">Buenos Aires Ciudad · Alianza de Ciudades Saludables</span>
+      <div class="leg">
+        <div class="leg-item"><span class="leg-dot ld-mdh"></span>MDHyH</div>
+        <div class="leg-item"><span class="leg-dot ld-msal"></span>MSAL</div>
+        <div class="leg-item"><span class="leg-dot ld-otro"></span>Otro</div>
+      </div>
+    </div>
+  </div>
+  <div class="header-stripe"></div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" onclick="show('c1',this)">
+    Caso A · Mujer
+    <span class="tsub">Acercáte · Parque Patricios</span>
+  </button>
+  <button class="tab" onclick="show('c2',this)">
+    Caso B · Varón
+    <span class="tsub">Acercáte · Parque Patricios</span>
+  </button>
+  <button class="tab" onclick="show('c3',this)">
+    Caso C · Mujer
+    <span class="tsub">Carpas · Parque de la Estación</span>
+  </button>
+</nav>
+
+
+<!-- ══════════════════════════════════════  CASO A  ══════════════════════════════════════ -->
+<div class="caso show" id="c1">
+  <div class="profile">
+    <p class="profile-eyebrow">Caso 1 de 3</p>
+    <h2 class="profile-name">Caso A · Mujer</h2>
+    <div class="profile-pills">
+      <span class="pp">Mujer</span>
+      <span class="pp disp">Acercáte · Parque Patricios</span>
+      <span class="pp">Pasta base · Situación de calle</span>
+      <span class="pp">Antecedentes de privación de libertad</span>
+    </div>
+  </div>
+
+  <div class="char-section">
+    <p class="section-label">Caracterización del caso</p>
+    <div class="char-grid">
+      <div class="char-col c-ctx">
+        <div class="char-label">Dimensiones estructurales</div>
+        <div class="char-tags">
+          <span class="ctag">Situación de calle crónica</span>
+          <span class="ctag">Trayectoria de privación de libertad</span>
+          <span class="ctag">Acceso fragmentado y discontinuo a salud mental</span>
+          <span class="ctag">Dependencia del subsidio habitacional como única alternativa residencial</span>
+        </div>
+      </div>
+      <div class="char-col c-rel">
+        <div class="char-label">Condiciones de intervención</div>
+        <div class="char-tags">
+          <span class="ctag">Conflicto familiar severo</span>
+          <span class="ctag">Pareja con consumo problemático compartido y violencia física</span>
+          <span class="ctag">Alternancia crónica entre abstinencia y recaída</span>
+          <span class="ctag">Aislamiento progresivo de red afectiva fuera del dispositivo</span>
+        </div>
+      </div>
+      <div class="char-col c-ind">
+        <div class="char-label">Condicionantes contextuales</div>
+        <div class="char-tags">
+          <span class="ctag">Trayectoria de consumo agravada por experiencias de pérdida no elaboradas</span>
+          <span class="ctag">Discapacidad visual como barrera de acceso no abordada sistémicamente</span>
+          <span class="ctag">El dispositivo grupal como fuerza de anclaje y pertenencia</span>
+          <span class="ctag">Demanda activa de escucha como fuerza de agencia ante el riesgo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label">Momentos de la intervención</p>
+  <div class="tl">
+
+    <div class="moment m0">
+      <div class="m-label"><div class="m-badge">Ingreso</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 0 · Ingreso al dispositivo</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Se acerca al dispositivo por sugerencia de un integrante del grupo terapéutico. Se encontraba con su pareja en situación de calle en el Parque Patricios. Concurría diariamente al DIPA y al comedor de Atuel.
+            <div class="chips">
+              <span class="ch ch-mdh">DIPA</span>
+              <span class="ch ch-mdh">Comedor de Atuel</span>
+              <span class="ch ch-msal">Acercáte · Parque Patricios</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m1">
+      <div class="m-label"><div class="m-badge">1ª entrevista</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 1 · Primera entrevista integral</div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Consulta para trámite del CUD y pensión por disminución de la agudeza visual. Se ofrecen vacunas (HepB, doble adultos, neumococo) y test dúo de VIH y sífilis — resultado negativo. Se la invita al grupo terapéutico.
+            <div class="chips">
+              <span class="ch ch-msal">Acercáte (CUD + vacunas + test)</span>
+              <span class="ch ch-msal">Grupo terapéutico</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Refiere sentirse cómoda en el grupo, lo que tiene un efecto en la disminución de su consumo. Continúa concurriendo los días asistenciales para comer y gestionar turnos (oftalmología).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m2">
+      <div class="m-label"><div class="m-badge">Vivienda</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 2 · Acceso a vivienda — salida de la calle</div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Ella y su pareja acceden al subsidio habitacional y alquilan juntos — ya no se encuentran en situación de calle.
+            <div class="chips"><span class="ch ch-mdh">Subsidio habitacional GCBA</span></div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Las estrategias del equipo se orientan a la problematización del consumo (grupo terapéutico), el acceso a atención primaria (vacunas, test VIH), turnos en el sistema de salud y acompañamiento en trámites para la salida de la situación de calle.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Continúa la asistencia regular al dispositivo. El grupo terapéutico funciona como espacio de contención y sostén en la transición habitacional.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m3">
+      <div class="m-label"><div class="m-badge">Pareja detenida</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 3 · Pareja detenida — fortalecimiento de la autonomía</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">La pareja queda detenida por robo en contexto de consumo. Ella comienza a participar regularmente del grupo. Teme que, con un solo ingreso, el consumo derive en pérdida del alquiler y vuelta a la calle. Retoma contacto con su familia y se vincula con vecinos y referentes afectivos.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Se trabaja en entrevistas individuales el fortalecimiento de su autonomía y la ampliación de la red afectiva. Asiste por su cuenta a nueva admisión en centro de SM para adicciones (no concurre a los turnos siguientes). Suspende el consumo de pasta base por un tiempo. Realiza mudanza con colaboración de compañeros del grupo. Se incorpora al taller de arte.
+            <div class="chips">
+              <span class="ch ch-msal">Centro SM adicciones (admisión)</span>
+              <span class="ch ch-msal">Taller de arte · Acercáte</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m4">
+      <div class="m-label"><div class="m-badge">Violencia</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 4 · Episodio de violencia — reorganización del encuadre</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">La pareja sale de la detención. Realizan nueva mudanza a un barrio con mayor acceso a pasta base y ella retoma el consumo diario. La pareja se suma sorpresivamente al grupo; el equipo reencuadra el espacio para que ella pueda seguir apropiándose de él. Días después ella reporta un episodio de violencia física y destrucción de objetos personales.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Urgencia: escucha telefónica, orientación para apelar a personas cercanas, derivación a guardia médica y datos de recursos judiciales. Se sostienen entrevistas individuales más taller de arte. Se indican benzodiacepinas y luego antipsicóticos (risperidona) — escasa adherencia.
+            <div class="chips">
+              <span class="ch ch-msal">Guardia médica (orientación)</span>
+              <span class="ch ch-otro">Recursos judiciales</span>
+              <span class="ch ch-msal">Centro SM adicciones (nuevo intento)</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Acceso a guardia médica para evaluación. Orientación sobre recursos judiciales disponibles.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m5">
+      <div class="m-label"><div class="m-badge">Actual</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento actual</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Continúa asistiendo. Refiere deseos de interrumpir el consumo. Se observa marcada disminución de la ansiedad y la inquietud psicomotora. Se vincula con compañeros fuera del grupo. Participa activamente del taller de arte.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Por iniciativa propia solicita teleconsulta por salud mental — turno otorgado, pendiente concretar. Se acompaña la continuidad del subsidio habitacional.
+            <div class="chips">
+              <span class="ch ch-msal">Teleconsulta SM (iniciativa propia)</span>
+              <span class="ch ch-mdh">Subsidio habitacional (renovación)</span>
+              <span class="ch ch-msal">Taller de arte · Acercáte</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Continuidad del subsidio habitacional en gestión. Turno pendiente en centro de salud mental.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <footer>Fuente: CASOS PARQUE PATRICIOS (anon.) · Dispositivo Acercáte — Parque Patricios · Red Interministerial GCBA · MDHyH + MSAL + Vital Strategies.</footer>
+</div>
+
+
+<!-- ══════════════════════════════════════  CASO B  ══════════════════════════════════════ -->
+<div class="caso" id="c2">
+  <div class="profile">
+    <p class="profile-eyebrow">Caso 2 de 3</p>
+    <h2 class="profile-name">Caso B · Varón</h2>
+    <div class="profile-pills">
+      <span class="pp">Varón</span>
+      <span class="pp disp">Acercáte · Parque Patricios</span>
+      <span class="pp">Alcohol · Cirrosis · Calle crónica</span>
+      <span class="pp">Múltiples trayectorias de privación de libertad</span>
+    </div>
+  </div>
+
+  <div class="char-section">
+    <p class="section-label">Caracterización del caso</p>
+    <div class="char-grid">
+      <div class="char-col c-ctx">
+        <div class="char-label">Dimensiones estructurales</div>
+        <div class="char-tags">
+          <span class="ctag">Situación de calle crónica</span>
+          <span class="ctag">Múltiples trayectorias de privación de libertad</span>
+          <span class="ctag">Deterioro severo de salud: cirrosis por enolismo, asma, diabetes</span>
+          <span class="ctag">Fragmentación del sistema de cuidado</span>
+        </div>
+      </div>
+      <div class="char-col c-rel">
+        <div class="char-label">Condiciones de intervención</div>
+        <div class="char-tags">
+          <span class="ctag">Múltiples duelos no resueltos</span>
+          <span class="ctag">Proceso judicial como condicionante permanente</span>
+          <span class="ctag">Reticencia a dispositivos del GCBA por experiencias previas negativas</span>
+          <span class="ctag">Conflicto con red familiar</span>
+        </div>
+      </div>
+      <div class="char-col c-ind">
+        <div class="char-label">Condicionantes contextuales</div>
+        <div class="char-tags">
+          <span class="ctag">Consumo crónico como respuesta a condiciones de vida adversas acumuladas</span>
+          <span class="ctag">Sintomatología compleja como expresión acumulada del malestar psicosocial</span>
+          <span class="ctag">Adherencia parcial como respuesta a la desconfianza institucional</span>
+          <span class="ctag">El vínculo operador-persona como fuerza terapéutica emergente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label">Momentos de la intervención</p>
+  <div class="tl">
+
+    <div class="moment m0">
+      <div class="m-label"><div class="m-badge">1er contacto</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 0 · Primer contacto</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">El equipo de Acercáte realiza atenciones en el Parador Roca, donde él se encontraba alojado. Desde ese momento se entabla y mantiene vínculo.
+            <div class="chips"><span class="ch ch-mdh">Parador Roca</span><span class="ch ch-msal">Acercáte</span></div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Atención médico-asistencial. Facilitación del acceso a turnos con especialistas y medicación.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Acceso a atención médica en el Parador. Gestión de turnos con especialistas.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m1">
+      <div class="m-label"><div class="m-badge">Detención</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 1 · Privación de libertad</div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Durante la detención se registran 3 guardias hospitalarias por agudización de asma y estudios de contacto TBC.
+            <div class="chips"><span class="ch ch-msal">Guardias hospitalarias</span></div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Al egresar, se encuentra nuevamente en situación de calle. Fallece su madre durante este período.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Sin intervención activa del equipo durante la detención. El equipo retoma el contacto al producirse el egreso.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m2">
+      <div class="m-label"><div class="m-badge">Reingreso</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 2 · Reingreso activo al dispositivo</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Llega a la Estación Saludable por invitación de un integrante del equipo en una recorrida territorial. Relata consumo de alcohol y pasta base, dos internaciones previas en comunidad terapéutica, tratamiento ambulatorio en Hospital Bonaparte. Declara estar sin consumo activo — preocupado por sostener la abstinencia en situación de calle.
+            <div class="chips">
+              <span class="ch ch-msal">Acercáte Parque Patricios</span>
+              <span class="ch ch-mdh">DIPA</span>
+              <span class="ch ch-msal">Hospital Bonaparte</span>
+              <span class="ch ch-msal">CESAC 10 · DBT</span>
+              <span class="ch ch-msal">Centro Biedak</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Se ofrecen gestiones para ingreso a CIS (rechaza). Seguimiento semanal continuo. Solicita CIS pero tiene el DNI extraviado — se acompaña en la denuncia y tramitación. Pierde la tarjeta de Ciudadanía Porteña. Orientación sobre turnos de SM. Gestión del Acta de Libertad. Traslado al DIPA para gestión de CIS. Gestión turno Centro Biedak.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Gestión de documentación (DNI, Ciudadanía Porteña, Acta de Libertad). Seguimiento en DBT y SM en CESAC y Hospital Bonaparte.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m3">
+      <div class="m-label"><div class="m-badge">Crisis</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 3 · Crisis: duelo múltiple y deterioro</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Fallece su hija. Se presenta muy angustiado, refiere "no tener ganas de seguir viviendo". Presenta un golpe en la cabeza infligido por la pareja de su ex mujer. El equipo lo traslada y acompaña al Hospital Borda para evaluación urgente. Se incorpora al grupo terapéutico de Parque Chacabuco.
+            <div class="chips">
+              <span class="ch ch-msal">Hospital Borda (urgencia y SM)</span>
+              <span class="ch ch-msal">Hospital Argerich (guardia)</span>
+              <span class="ch ch-mdh">Parador (reingreso)</span>
+              <span class="ch ch-msal">Grupo terapéutico Parque Chacabuco</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Acompañamiento centrado en la minimización de riesgos y la contención. Derivación urgente Hospital Borda — refuerzo de medicación. Gestión de ingreso a CIS. Guardia hospitalaria por intoxicación alcohólica. Reingreso a parador.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Guardia hospitalaria por intoxicación alcohólica. Evaluación urgente en Hospital Borda. Reingreso a parador.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m4">
+      <div class="m-label"><div class="m-badge">Judicial</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 4 · Arresto y acompañamiento judicial</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Por un episodio de violencia en el parador, es detenido. Enfrenta proceso judicial y debe reportarse a la fiscalía. El operador lo acompaña permanentemente, lo que genera un vínculo estrecho que él valora profundamente.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Retoma estrategia de SM en Hospital Borda. Presenta dolor abdominal → llamado al SAME → internación por hepatoesplenomegalia. El operador lo visita durante la internación. Gestión admisión CEMAR 2 (no concurre).
+            <div class="chips">
+              <span class="ch ch-msal">Hospital Penna (internación)</span>
+              <span class="ch ch-msal">SAME</span>
+              <span class="ch ch-msal">Hospital Borda · SM</span>
+              <span class="ch ch-msal">CEMAR 2</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Internación hospitalaria por hepatoesplenomegalia. Derivación SAME. Seguimiento SM en Hospital Borda.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m5">
+      <div class="m-label"><div class="m-badge">Diagnóstico</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 5 · Internación y diagnóstico de cirrosis</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">El operador lo acompaña a la guardia y durante la internación. Continúa participando del grupo terapéutico con entusiasmo, logrando vincularse afectivamente con los compañeros. Se celebra su cumpleaños en el dispositivo.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Recorrido: guardia Hospital Penna → hepatología Argerich → internación Hospital Fernández. Diagnóstico de egreso: cirrosis secundaria a enolismo. El equipo gestiona y carga la medicación para retiro en CESAC. Gestión turnos hepatología y toxicología.
+            <div class="chips">
+              <span class="ch ch-msal">Hospital Penna (guardia)</span>
+              <span class="ch ch-msal">Hospital Argerich (hepatología)</span>
+              <span class="ch ch-msal">Hospital Fernández (internación · cirrosis)</span>
+              <span class="ch ch-msal">Toxicología · Fernández</span>
+              <span class="ch ch-msal">CESAC (medicación)</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Internación hospitalaria. Diagnóstico de cirrosis por enolismo. Seguimiento en hepatología y toxicología. Retiro de medicación en CESAC.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m6">
+      <div class="m-label"><div class="m-badge">Hogar Cáritas</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 6 · Ingreso al Hogar de Cáritas — estabilización</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Compañeros del grupo terapéutico comparten residencia en el Hogar de Cáritas — se han convertido en un sostén diario para él.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Frente a su reticencia al CIS del GCBA y su delicada situación de salud, acepta ingresar al Hogar de Cáritas. La nueva situación habitacional hace que disminuya notablemente su consumo.
+            <div class="chips">
+              <span class="ch ch-otro">Hogar de Cáritas</span>
+              <span class="ch ch-msal">Hepatología · Fernández</span>
+              <span class="ch ch-msal">Toxicología · Fernández</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Alojamiento en Hogar de Cáritas. Guardias hospitalarias por ascitis. Seguimiento en hepatología y toxicología.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m7">
+      <div class="m-label"><div class="m-badge">Actual</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento actual</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Continúa en el Hogar de Cáritas. El equipo de Acercáte articula con el equipo del hogar. Participa regularmente del grupo terapéutico. Despliega angustia por proceso judicial y por no poder trabajar.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Escucha activa permanente. Propuesta de internación breve en toxicología — él acuerda, pendiente por falta de cama. Gestión de CUD (otorgado) y pensión por cirrosis descompensada (en trámite). Acompañamiento al turno de readmisión en toxicología.
+            <div class="chips">
+              <span class="ch ch-msal">Hospital Grierson</span>
+              <span class="ch ch-msal">Centro Biedak (SM)</span>
+              <span class="ch ch-msal">Hospital Borda (psiquiatría)</span>
+              <span class="ch ch-msal">Readmisión toxicología</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Internaciones por ascitis y asma. Regulariza medicación — mejoría clínica. Seguimiento: DBT, hepatología, neumonología, cardiología. CUD otorgado. Pensión por cirrosis descompensada en trámite.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <footer>Fuente: CASOS PARQUE PATRICIOS (anon.) · Dispositivo Acercáte — Parque Patricios · Red Interministerial GCBA · MDHyH + MSAL + Vital Strategies.</footer>
+</div>
+
+
+<!-- ══════════════════════════════════════  CASO C  ══════════════════════════════════════ -->
+<div class="caso" id="c3">
+  <div class="profile">
+    <p class="profile-eyebrow">Caso 3 de 3</p>
+    <h2 class="profile-name">Caso C · Mujer</h2>
+    <div class="profile-pills">
+      <span class="pp">Mujer</span>
+      <span class="pp">Discapacidad motriz</span>
+      <span class="pp disp">Carpas · Parque de la Estación</span>
+      <span class="pp">Trayectoria pausada de consumo</span>
+      <span class="pp">Dos hijas · CIS</span>
+    </div>
+  </div>
+
+  <div class="char-section">
+    <p class="section-label">Caracterización del caso</p>
+    <div class="char-grid">
+      <div class="char-col c-ctx">
+        <div class="char-label">Dimensiones estructurales</div>
+        <div class="char-tags">
+          <span class="ctag">Precariedad habitacional — dependencia del sistema de alojamiento institucional (CIS)</span>
+          <span class="ctag">Barreras de accesibilidad</span>
+          <span class="ctag">Derivaciones múltiples no concretadas</span>
+          <span class="ctag">Fragmentación del sistema de cuidados</span>
+        </div>
+      </div>
+      <div class="char-col c-rel">
+        <div class="char-label">Condiciones de intervención</div>
+        <div class="char-tags">
+          <span class="ctag">Separación de pareja y reorganización residencial del grupo familiar</span>
+          <span class="ctag">Cuidado de dos hijas en contexto de alta vulnerabilidad y movilidad reducida</span>
+          <span class="ctag">Riesgo de recaída como preocupación activa</span>
+          <span class="ctag">El equipo Carpas como referente afectivo en situaciones de crisis</span>
+        </div>
+      </div>
+      <div class="char-col c-ind">
+        <div class="char-label">Condicionantes contextuales</div>
+        <div class="char-tags">
+          <span class="ctag">Discapacidad motriz como barrera de acceso y movilidad no resuelta por el sistema</span>
+          <span class="ctag">Búsqueda activa de escucha como fuerza protectora</span>
+          <span class="ctag">El cuidado de las hijas como fuerza de motivación y sostén vincular</span>
+          <span class="ctag">Lo cultural-recreativo como dispositivo de construcción identitaria y de red</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label">Momentos de la intervención</p>
+  <div class="tl">
+
+    <div class="moment m0">
+      <div class="m-label"><div class="m-badge">Ingreso</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 0 · Ingreso al dispositivo</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Se acerca a través de una articulación con el equipo del CIS de Urquiza, donde se encontraba alojada junto a su grupo familiar. Se presenta sin consumo activo, demandando un espacio de escucha ante sus miedos a la recaída.
+            <div class="chips"><span class="ch ch-mdh">CIS Urquiza</span><span class="ch ch-mdh">Dispositivo Carpas</span></div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Apertura del vínculo con el dispositivo. Articulación inicial con el CIS de Urquiza como referente habitacional.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Alojamiento en CIS Urquiza (familia completa). Primera articulación con Dispositivo Carpas.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m1">
+      <div class="m-label"><div class="m-badge">1ª propuesta</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 1 · Primera propuesta terapéutica</div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Derivación al CIAC Almagro. No concreta la adhesión a la propuesta terapéutica. El equipo evalúa que el espacio no es acorde a sus necesidades.
+            <div class="chips"><span class="ch ch-mdh">CIAC Almagro</span></div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Continúa el vínculo con Carpas. La derivación no concretada refuerza la necesidad de explorar otras estrategias.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Derivación a CIAC Almagro (no concretada). Evaluación de la adecuación de los servicios disponibles.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m2">
+      <div class="m-label"><div class="m-badge">Reorganización familiar</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 2 · Reorganización del grupo familiar</div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Articulación con CIS Urquiza ante pedido de derivación intercis de la pareja. Se concreta la separación residencial: ella y su hija mayor al CIS América; su ex pareja al CIS Carlos Calvo con la hija más pequeña.
+            <div class="chips">
+              <span class="ch ch-mdh">CIS América</span>
+              <span class="ch ch-mdh">CIS Carlos Calvo</span>
+              <span class="ch ch-mdh">CIS Urquiza</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">La reorganización implica la separación del grupo familiar. El equipo Carpas sostiene el acompañamiento durante la transición.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Reubicación en CIS América (ella + hija mayor). Derivación intercis para la ex pareja y la hija menor (CIS Carlos Calvo).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m3">
+      <div class="m-label"><div class="m-badge">Crisis SM</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 3 · Crisis de salud mental</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">El equipo de Carpas es convocado por el Hospital Penna como referentes afectivos ante un ataque de ansiedad en el CIS. El vínculo con el dispositivo se consolida como red de sostén en situaciones de urgencia.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Articulación con Hospital Penna (SM). Acompañamiento desde Carpas como referentes afectivos. Se articula con equipo del Borda — el equipo evalúa que no es el espacio adecuado. Articulación con CNNyA para la hija mayor.
+            <div class="chips">
+              <span class="ch ch-msal">Hospital Penna · SM</span>
+              <span class="ch ch-msal">Hospital Borda (articulación)</span>
+              <span class="ch ch-otro">CNNyA</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Atención de urgencia en Hospital Penna (SM). Articulación con Borda (no concretada). CNNyA para la hija mayor.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m4">
+      <div class="m-label"><div class="m-badge">Estabilización</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento 4 · Estabilización y acceso a derechos</div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">Articulación con CIS El Faro para que viva allí con su hija mayor — solicitud que venía planteando. Articulación con CESAC 38 para control sanitario. Articulación con la Biblioteca del Parque de la Estación.
+            <div class="chips">
+              <span class="ch ch-mdh">CIS El Faro</span>
+              <span class="ch ch-msal">CESAC 38</span>
+              <span class="ch ch-otro">Biblioteca Parque de la Estación</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">A través de la Biblioteca se abre un vínculo comunitario de referencia en el barrio, articulando con PSC para pensar el habitar junto a su hija.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">Traslado a CIS El Faro (ella + hija mayor). Control sanitario en CESAC 38. Participación en espacio comunitario de Biblioteca.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moment m5">
+      <div class="m-label"><div class="m-badge">Actual</div></div>
+      <div class="m-dot"></div>
+      <div class="m-content">
+        <div class="m-title">Momento actual — Ampliación de red</div>
+        <div class="m-row">
+          <span class="cat-tag vinc">Vincularidad</span>
+          <div class="m-text">Participa del taller de música una vez por semana. A través de este espacio se abre el vínculo con la USaM para iniciar consultas por la colocación de su prótesis. Articulación con Asociación Raíces para propuesta lúdico-recreativa para la hija mayor.
+            <div class="chips">
+              <span class="ch ch-msal">USaM (prótesis)</span>
+              <span class="ch ch-otro">Asociación Raíces</span>
+              <span class="ch ch-mdh">Taller de música · Carpas</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag estr">Estrategias</span>
+          <div class="m-text">El taller de música funciona como puerta de entrada a la articulación con servicios especializados (USaM). La red recreativa de la hija mayor amplía el sostén del grupo familiar.</div>
+        </div>
+        <div class="m-row">
+          <span class="cat-tag serv">Servicios</span>
+          <div class="m-text">USaM para prótesis (consultas en curso). Espacio lúdico-recreativo para la hija mayor vía Asociación Raíces. Taller de música semanal en Carpas.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <footer>Fuente: Informe CARPAS · Dispositivo Carpas — Parque de la Estación · Red Interministerial GCBA · MDHyH + MSAL + Vital Strategies.</footer>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.caso').forEach(c=>c.classList.remove('show'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('show');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
